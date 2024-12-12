@@ -1,0 +1,102 @@
+# MilJobs Setup Notes
+
+This document contains detailed instructions for setting up the Google Cloud Platform (GCP) components needed for the MilJobs application.
+
+## GCP Project Setup Process
+
+### Initial Project Creation
+The first step in setting up GCP is creating a new project:
+
+1. Navigate to console.cloud.google.com
+2. Look for the project dropdown at the top of the page
+3. Click 'New Project'
+4. Name it something memorable like 'miljobs-prod' or 'miljobs-dev'
+5. Note down the Project ID - you'll need this for configuration
+
+### Enabling the Talent Solution API
+After creating your project, you'll need to enable the Cloud Talent Solution API:
+
+1. Go to the APIs & Services Dashboard
+2. Click 'Enable APIs and Services'
+3. Search for 'Cloud Talent Solution API'
+4. Enable it for your project
+
+### Service Account Setup
+To access the API securely, you need a service account:
+
+1. Go to IAM & Admin > Service Accounts
+2. Create a new service account
+3. Name it something like 'miljobs-service-account'
+4. Add these roles:
+   - Cloud Talent Solution Job Editor
+   - Cloud Talent Solution Profile Editor
+   - Cloud Talent Solution API User
+5. Create and download a JSON key file
+6. Rename it to something memorable like 'gcp-credentials.json'
+
+### Local Development Setup
+
+1. Environment File:
+   Create a .env file with these variables:
+   ```
+   GOOGLE_CLOUD_PROJECT=your-project-id
+   GOOGLE_APPLICATION_CREDENTIALS=./gcp-credentials.json
+   ```
+
+2. Credential File:
+   - Move your gcp-credentials.json to the project root
+   - Make sure it's listed in .gitignore
+   - Never commit this file!
+
+### Testing the Setup
+
+You can verify your setup with this Python code:
+
+```python
+from google.cloud import talent
+from google.cloud.talent import enums
+
+def test_connection():
+    client = talent.JobServiceClient()
+    parent = f'projects/{your_project_id}'
+    try:
+        client.list_jobs(parent=parent)
+        print('Successfully connected to Cloud Talent Solution API')
+    except Exception as e:
+        print(f'Error connecting: {e}')
+```
+
+### Common Issues and Solutions
+
+1. Authentication Errors:
+   - Check that GOOGLE_APPLICATION_CREDENTIALS points to the right file
+   - Verify the credentials file is valid JSON
+   - Ensure the service account has proper permissions
+
+2. API Errors:
+   - Confirm the API is enabled in your project
+   - Check if you're using the correct project ID
+   - Verify your service account has necessary roles
+
+3. Connection Issues:
+   - Test your internet connection
+   - Verify your firewall isn't blocking Google APIs
+   - Try using a different network if needed
+
+### Security Best Practices
+
+1. Credential Management:
+   - Never commit credentials to version control
+   - Rotate service account keys regularly
+   - Use environment variables in production
+
+2. Access Control:
+   - Follow principle of least privilege
+   - Regularly audit service account permissions
+   - Remove unused service accounts
+
+### Additional Resources
+
+- Cloud Talent Solution Documentation: https://cloud.google.com/talent-solution/docs
+- GCP Authentication Guide: https://cloud.google.com/docs/authentication
+- Best Practices: https://cloud.google.com/docs/enterprise/best-practices-for-enterprise-organizations
