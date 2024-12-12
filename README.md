@@ -17,23 +17,16 @@ MilJobs is a platform that leverages Google's Cloud Talent Solution API to provi
 
 3. Configure environment variables:
    - Copy `.env.example` to `.env`
-   - Update the values in `.env` with your credentials
+   - Update the values in `.env` with your Google Cloud credentials
 
 ## Configuration
 
-This project requires the following credentials:
+This project requires Google Cloud Project credentials. Make sure you have:
 
-1. GitHub Personal Access Token (for development)
-2. Google Cloud Project credentials
+1. A Google Cloud Project with the Talent Solution API enabled
+2. Proper credentials set up for accessing the API
 
 See `.env.example` for required environment variables.
-
-## Development
-
-To verify your GitHub authentication:
-```bash
-python github_auth.py
-```
 
 ## License
 
